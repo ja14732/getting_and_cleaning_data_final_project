@@ -1,0 +1,55 @@
+The run_analysis.R file included in this Github repository fulfills all the requirements of this analysis.
+
+First, the code loads the required package for the analysis, the dpylr package.  This package will allow usage of tools used later to analyze the data.
+If the dpylr package is not currently installed, there is a commented-out line of code in line 1 that will install the package for use.
+
+Afterwords, the zipped folder is downloaded to the file named Getting_and_Cleaning_Data_Final.zip, then unzipped to create the folder.
+Then, the different files found in the unzipped folder are then loaded into R separately.  This will allow analysis later.
+These tables are as follows;
+  features: Derived from the features.txt file, this table shows the raw signal data from the gyroscope and accelerometer.
+            These observations are three dimensional, based on time, x-axis movement and y-axis movement.
+            There are 561 observations in 2 columns in this table.
+  activities: Derived from the activity_labels.txt file, this table shows the list of activites being performed when 
+            the corresponding measurements were taken.  It also shows the label of the activities, in a code form.
+            There are 6 different activities, with the first column showing the codes/labels and the second column showing the activity.
+  subject_test: Derived from the test/subject_test.txt file, this shows the test data of 9 of the 30 volunteers observed in the study.
+                There are 2947 observations in 1 column in this table.
+  x_test: Derived from the test/x_test.txt file, this table shows the recorded features test data.
+          There are 2947 observations found in 561 columns in this table.
+  y_test: Derived from the test/y_test.txt file, this table shows the test data of activites' code labels.
+          There are 2947 observations found in 1 column in this table.
+  subject_train: Derived from the train/subject_train.txt file, this shows the training data from the other 21 volunteers in the study.
+                 There are 7352 observations in this table, collected in one column.
+  x_train: Derived from the train/x_train.txt file, this table shows the recorded features training data.
+           There are 7352 rows in this table, with 561 different rows
+  y_train: Derived from the train/y_train.txt file, this table shows the training data of activities' code labels.
+           There are 7352 rows in this table, with only 1 column.
+
+Next, the tables are merged as follows, using the rbind() function.
+  X_table is created by merging the x_test and the x_train tables.  This results in a table with 10299 rows and 561 columns.
+  Y_table is created by merging the y_test and the y_train tables.  This results in a table with 10299 rows and 1 column.
+  Subject_table is created by merging the subject_test and the subject_train tables.  This results in a table with 10299 rows and 1 column.
+
+Finally, the code creates the Merged_table table by merging all of the above tables using the cbind() function.  
+This table has 10299 rows(observations) and 563 columns.
+
+After creating this merged table, the TidyData dataset is created using the dpylr package.  By subsetting only the columns of subject, 
+code, and measurements of both the means and standard deviations of each measurement.  This significantly cuts down the number of columns
+in the Merged_table dataset from 563 to 88 columns.  This creates the TidyData dataset.
+
+Now, in order to better describe the activities, the codes found from the activities table are replaced using their corresponding activity
+from the same table.  This creates more descriptive, albeit abridged names.  These names are then transformed into more descriptive names.
+First, the code column in the table is renamed to activities to better describe the results.
+Next, all abbreviations found in the table for names are replaced as below, using the gsub() function:
+  "Acc" is replaced by "Accelerometer".
+  "Gyro" is replaced by "Gyroscope".
+  "BodyBody" is replaced by "Body".
+  "Mag" is replaced by "Magnitude".
+  All columns that start with "t" have that "t" replaced by "Time".
+  All columns that start with "f" have that "f" replaced by "Frequency".
+  
+From here, the group_by() function is used to collate the observations by the subject and the activity, and finally the data is summarized
+with the line summarize_all(funs(mean)) take the means of each variable for each subject and activity.  This creates the FinalData
+dataset, which now has 180 rows and 88 columns.  This is the final, tidy data set.
+
+Then the code writes the FinalData dataset to a .txt file using the row.name = FALSE command.
