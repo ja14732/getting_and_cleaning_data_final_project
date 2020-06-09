@@ -18,9 +18,9 @@ y_train <- read.table("UCI HAR Dataset/train/y_train.txt", col.names = "code")
 X_table<- rbind(x_train, x_test)
 Y_table<- rbind(y_train, y_test)
 Subject_table <- rbind(subject_train, subject_test)
-Merged_Data <- cbind(Subject_table, Y_table, X_table)
+Merged_table <- cbind(Subject_table, Y_table, X_table)
 
-TidyData <- Merged_Data %>%
+TidyData <- Merged_table %>%
   select(subject, code, contains("mean"), contains("std"))
 TidyData$code<- activities[TidyData$code, 2]
 
